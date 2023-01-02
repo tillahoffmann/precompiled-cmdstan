@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        cmdstanVersion:
+          - "2.31.0"
+        os:
+          - ubuntu-20.04
+    name: Package tests and linting
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: "actions/checkout@v2"
+      - uses: "actions/setup-python@v2"
+        with:
+          python-version: "3.10"
+      - name: Install cmdstanpy
+        run: pip install cmdstanpy
+      - name: Compile cmdstan
+        run: python -m cmdstanpy.install_cmdstan --version ${{ matrix.cmdstanVersion }}
