@@ -9,6 +9,7 @@ on:
 
 jobs:
   build:
+    name: Build
     strategy:
       fail-fast: false
       matrix:
@@ -19,7 +20,8 @@ jobs:
         os:
           - ubuntu-20.04
           - ubuntu-22.04
-    name: Package tests and linting
+          - macos-11
+          - macos-12
     runs-on: ${{ matrix.os }}
     steps:
       - uses: "actions/checkout@v2"
@@ -33,6 +35,7 @@ jobs:
       - name: Build release artifact
         run: tar -czvf cmdstan-${{ matrix.os }}-${{ matrix.cmdstanVersion }}.tar.gz -C ~/.cmdstan cmdstan-${{ matrix.cmdstanVersion }}
       - name: Upload the artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository_owner == 'tillahoffmann'
         uses: softprops/action-gh-release@v1
         with:
           tag_name: cmdstan-${{ matrix.os }}-${{ matrix.cmdstanVersion }}
