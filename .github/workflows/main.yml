@@ -19,6 +19,8 @@ jobs:
         os:
           - ubuntu-20.04
           - ubuntu-22.04
+          - macos-11
+          - macos-12
     name: Package tests and linting
     runs-on: ${{ matrix.os }}
     steps:
