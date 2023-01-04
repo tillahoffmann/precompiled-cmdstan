@@ -9,6 +9,7 @@ on:
 
 jobs:
   build:
+    name: Build
     strategy:
       fail-fast: false
       matrix:
@@ -21,7 +22,6 @@ jobs:
           - ubuntu-22.04
           - macos-11
           - macos-12
-    name: Package tests and linting
     runs-on: ${{ matrix.os }}
     steps:
       - uses: "actions/checkout@v2"
