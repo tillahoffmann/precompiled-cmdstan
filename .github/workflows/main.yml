@@ -17,6 +17,7 @@ jobs:
           - "2.31.0"
           - "2.30.1"
           - "2.30.0"
+          - "latest"
         os:
           - ubuntu-20.04
           - ubuntu-22.04
@@ -30,8 +31,12 @@ jobs:
           python-version: "3.10"
       - name: Install cmdstanpy
         run: pip install cmdstanpy
-      - name: Compile cmdstan
+      - name: Compile locked cmdstan version
+        if: matrix.cmdstanVersion != 'latest'
         run: python -m cmdstanpy.install_cmdstan --version ${{ matrix.cmdstanVersion }} --verbose
+      - name: Compile latest cmdstan version
+        if: matrix.cmdstanVersion == 'latest'
+        run: python -m cmdstanpy.install_cmdstan --verbose
       - name: Build release artifact
         run: tar -czvf cmdstan-${{ matrix.os }}-${{ matrix.cmdstanVersion }}.tar.gz -C ~/.cmdstan cmdstan-${{ matrix.cmdstanVersion }}
       - name: Upload the artifact
