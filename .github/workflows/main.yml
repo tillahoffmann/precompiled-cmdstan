@@ -14,6 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         cmdstanVersion:
+          - "2.32.2"
+          - "2.32.1"
           - "2.32.0"
           - "2.31.0"
           - "2.30.1"
