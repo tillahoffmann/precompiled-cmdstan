@@ -25,6 +25,7 @@ jobs:
           - ubuntu-22.04
           - macos-11
           - macos-12
+          - windows-2022
     runs-on: ${{ matrix.os }}
     steps:
       - uses: "actions/checkout@v2"
@@ -33,6 +34,9 @@ jobs:
           python-version: "3.10"
       - name: Install cmdstanpy
         run: pip install cmdstanpy
+      - name: Install cxx toolchain on Windows
+        run: python -m cmdstanpy.install_cxx_toolchain
+        if: startsWith(matrix.os, 'windows')
       - name: Compile cmdstan
         run: python -m cmdstanpy.install_cmdstan --version ${{ matrix.cmdstanVersion }} --verbose
       - name: Build release artifact
