@@ -25,6 +25,7 @@ jobs:
           - ubuntu-22.04
           - macos-11
           - macos-12
+          - windows-2022
     runs-on: ${{ matrix.os }}
     steps:
       - uses: "actions/checkout@v2"
@@ -33,10 +34,21 @@ jobs:
           python-version: "3.10"
       - name: Install cmdstanpy
         run: pip install cmdstanpy
-      - name: Compile cmdstan
+
+      - name: Compile cmdstan on Windows
+        run: python -m cmdstanpy.install_cmdstan --compiler --version ${{ matrix.cmdstanVersion }} --verbose
+        if: startsWith(matrix.os, 'windows')
+      - name: Compile cmdstan on Linux and macOS
         run: python -m cmdstanpy.install_cmdstan --version ${{ matrix.cmdstanVersion }} --verbose
-      - name: Build release artifact
+        if: startsWith(matrix.os, 'windows') == false
+
+      - name: Build release artifact on Windows
+        run: tar -czvf cmdstan-${{ matrix.os }}-${{ matrix.cmdstanVersion }}.tar.gz -C %HOMEPATH%/.cmdstan cmdstan-${{ matrix.cmdstanVersion }}
+        if: startsWith(matrix.os, 'windows')
+      - name: Build release artifact on Linux and macOS
         run: tar -czvf cmdstan-${{ matrix.os }}-${{ matrix.cmdstanVersion }}.tar.gz -C ~/.cmdstan cmdstan-${{ matrix.cmdstanVersion }}
+        if: startsWith(matrix.os, 'windows') == false
+
       - name: Upload the artifact
         if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository_owner == 'tillahoffmann'
         uses: softprops/action-gh-release@v1
