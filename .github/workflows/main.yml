@@ -27,8 +27,8 @@ jobs:
           - macos-12
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: "actions/checkout@v2"
-      - uses: "actions/setup-python@v2"
+      - uses: "actions/checkout@v4"
+      - uses: "actions/setup-python@v5"
         with:
           python-version: "3.10"
       - name: Install cmdstanpy
@@ -39,7 +39,7 @@ jobs:
         run: tar -czvf cmdstan-${{ matrix.os }}-${{ matrix.cmdstanVersion }}.tar.gz -C ~/.cmdstan cmdstan-${{ matrix.cmdstanVersion }}
       - name: Upload the artifact
         if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository_owner == 'tillahoffmann'
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: cmdstan-${{ matrix.os }}-${{ matrix.cmdstanVersion }}
           files: cmdstan-${{ matrix.os }}-${{ matrix.cmdstanVersion }}.tar.gz
