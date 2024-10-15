@@ -26,10 +26,12 @@ jobs:
           - "2.30.1"
           - "2.30.0"
         os:
+          # https://docs.github.com/en/actions/using-github-hosted-runners/using-github-hosted-runners/about-github-hosted-runners#standard-github-hosted-runners-for-public-repositories
           - ubuntu-20.04
           - ubuntu-22.04
-          - macos-11
           - macos-12
+          - macos-13
+          - macos-14
     runs-on: ${{ matrix.os }}
     steps:
       - uses: "actions/checkout@v4"
